@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup, Comment
 columns = ('team_id', 'season', 'wins', 'losses', 'ties', 'points_forced', 'points_allowed', 'point_differential')
 standings = pd.DataFrame(columns=columns)
 
-os.chdir('/Users/chadgahafer/Desktop/Scripts/databases') #change this to where your SQLite database is located
+os.chdir('path/to/your/database') #change this to where your SQLite database is located
 conn = sqlite3.connect('nfldb.sqlite')
 cur = conn.cursor()
 
@@ -40,12 +40,6 @@ for year in range(1932, 2025):
             team_id = team_dict.get(name)
             
             row_data = [td.get_text(strip=True) for td in tr.select('td')]
-            
-            # Tm	               W	L	  W-L%	 PF	     PA	    PD	  MoV	SoS	    SRS	   OSRS	   DSRS
-
-            # Kansas City Chiefs ['11', '6', '.647', '371', '294', '77', '4.5', '-0.8', '3.7', '-0.6', '4.4']
-            #                     0      1     2      3      4      5      6      7      8    9         10
-            #print(len(row_data), year)
             wins = int(row_data[0])
             losses = int(row_data[1])
             if len(row_data) == 11:
@@ -57,7 +51,6 @@ for year in range(1932, 2025):
                 points_forced = int(row_data[4])
                 points_allowed =int(row_data[5])
             point_differential = points_forced - points_allowed
-            #print(team_id, name, wins, losses, ties, points_forced, points_allowed, point_differential)
             row = {
                 'team_id': team_id,
                 'season': year,
