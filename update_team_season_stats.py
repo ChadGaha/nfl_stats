@@ -5,7 +5,7 @@ import sqlite3
 import os
 import time
 
-os.chdir('/path/to/you/database') #change this to where your SQLite database is located
+os.chdir('path/to/your/database') #change this to where your SQLite database is located
 conn = sqlite3.connect('nfldb.sqlite')
 cur = conn.cursor()
 
@@ -17,7 +17,9 @@ team_dict = dict()
 for line in teams:
     team_dict[line[0]] = line[1]
 
-year = 2024
+year = int(input('What year do you want to update?\n'))
+update_count = 0
+
 
 url = f"https://www.pro-football-reference.com/years/{year}/"
 time.sleep(7) #this obeys pro-football-reference's rate limits and make the traffic random to appear more human
@@ -48,6 +50,7 @@ for tr in table.select('tr'): #loops through each row of the table
     cur.execute('''UPDATE season_offensive_stats
                 SET games = ?, rush_attempts = ?, rush_yards = ?, rush_tds = ?, fumbles = ? , rush_expected_points = ?
                 WHERE team_id = ? AND season = ?;''', (games, rush_attempts, rush_yards, rush_tds, fumbles, rush_expected_points, rush_team_id, year))
+    update_count += 1
 
 time.sleep(1)
 print('Pulling updated passing data for 2024')   
@@ -75,6 +78,7 @@ for tr in table.select('tr'):
     cur.execute('''UPDATE season_offensive_stats
                 SET pass_attempts = ?, completions = ?, pass_yards = ?, pass_tds = ?, interceptions = ?, sacks = ?, sack_yards = ?, fourth_quarter_comebacks = ?, game_winning_drives = ?, pass_expected_points = ?
                 WHERE team_id = ? AND season = ?;''', (pass_attempts, completions, pass_yards, pass_touchdowns, interceptions, sacks, sack_yards, fourth_quarter_comebacks, game_winning_drives, pass_expected_points, pass_team_id, year))
+    update_count += 1
     
 url = f"https://www.pro-football-reference.com/years/{year}/opp.htm"
 time.sleep(8)
@@ -132,10 +136,12 @@ for tr in table.select('tr'):
                 SET pass_attempts = ?, completions = ?, pass_yards = ?, pass_tds = ?, interceptions = ?, passes_defended = ?, sacks = ?, sack_yards = ?, qb_hits = ?, tfl = ?, pass_expected_points = ?
                 WHERE team_id = ? AND season = ?''', (pass_attempts_def, completions_def, pass_yards_def, pass_tds_def, interceptions_def, passes_defended_def, sacks_def, sack_yards_def, qb_hits_def, tfl, pass_expected_points_def, pass_def_team_id, year))
 
+print(f"Rows updated: {update_count}")
 
+team_updates = int(update_count) // 2
+print(f"The amount of teams updated is:", team_updates)
 conn.commit()
 
 print('\nAll season stats have been updated for', year)
-        
 
 conn.close()
