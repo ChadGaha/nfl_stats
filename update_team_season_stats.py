@@ -5,7 +5,7 @@ import sqlite3
 import os
 import time
 
-os.chdir('/Users/chadgahafer/Desktop/Scripts/databases') #change this to where your SQLite database is located
+os.chdir('path/to/your/database') #change this to where your SQLite database is located
 conn = sqlite3.connect('nfldb.sqlite')
 cur = conn.cursor()
 
