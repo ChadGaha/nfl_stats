@@ -9,6 +9,6 @@ To ensure proper indexing and primary/foreign key assignments, it is necessary t
 4. team_defense_stats.py
 5. nfl_standings.py
 
-The with 'update' can be used to update the database with data from the present year.
+The scripts with 'update' can be used to update the database with data from the present year.
 
 nfldb_queries.py contains SQL queries that can be imported for further analysis.
