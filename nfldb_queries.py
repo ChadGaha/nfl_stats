@@ -1,11 +1,15 @@
+#this python file contains functions with pre-written SQL queries that can be imported into other scripts for quicker analysis
+#all query results are returned as a dataframe
+
 import sqlite3
 import os
 import pandas as pd
 
-os.chdir('/Users/chadgahafer/Desktop/Scripts/databases')
+os.chdir('path/to/your/databse')
 conn = sqlite3.connect('nfldb.sqlite')
 cur = conn.cursor()
 
+#query which returns average rush attempts for all teams by year
 def season_average_rush_attempts():
 
     ra_sql = '''SELECT season AS year, AVG(rush_attempts) AS rush_attempts
@@ -17,6 +21,7 @@ def season_average_rush_attempts():
     conn.close()
     return df
 
+#query which returns the average of all offensive stats for all teams per year
 def offensive_season_averages_by_year():
     sql = '''SELECT season,
                 AVG(games) AS games,
@@ -42,6 +47,7 @@ def offensive_season_averages_by_year():
     conn.close()
     return df
 
+#same as above query, but only since 1970 when the full merge happened and we have data for all NFL teams
 def team_offensive_averages_since_1970():
     sql = '''SELECT (t.location || ' ' || t.name) AS team,
                 AVG(s.games) AS games,
